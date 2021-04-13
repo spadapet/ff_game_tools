@@ -2,5 +2,5 @@
     x:Class="ff.resource_editor.app"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    StartupUri="main_window.xaml">
+    StartupUri="ui/main_window.xaml">
 </Application>

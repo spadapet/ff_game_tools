@@ -174,26 +174,8 @@ csharp_space_between_square_brackets = false
 csharp_preserve_single_line_blocks = true
 csharp_preserve_single_line_statements = true
 
-#### Naming styles ####
-
-# Naming rules
-
-dotnet_naming_rule.all_should_be_snake_case.severity = error
-dotnet_naming_rule.all_should_be_snake_case.symbols = all
-dotnet_naming_rule.all_should_be_snake_case.style = snake_case
-
-# Symbol specifications
-
-dotnet_naming_symbols.all.applicable_kinds = *
-dotnet_naming_symbols.all.applicable_accessibilities = *
-dotnet_naming_symbols.all.required_modifiers = 
-
-# Naming styles
-
-dotnet_naming_style.snake_case.required_prefix = 
-dotnet_naming_style.snake_case.required_suffix = 
-dotnet_naming_style.snake_case.word_separator = _
-dotnet_naming_style.snake_case.capitalization = all_lower
-
 # CA1707: Identifiers should not contain underscores
 dotnet_diagnostic.CA1707.severity = none
+
+# IDE0040: Add accessibility modifiers
+dotnet_diagnostic.IDE0040.severity = error

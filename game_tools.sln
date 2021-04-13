@@ -5,10 +5,12 @@ VisualStudioVersion = 17.0.31212.48
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ff.resource_editor", "ff.resource_editor\ff.resource_editor.csproj", "{6FA038B6-3FE0-4304-8420-DB165A151859}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "global", "global", "{FC1A2DA9-DF83-46D0-987E-0E3B222C21BB}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution_items", "solution_items", "{FC1A2DA9-DF83-46D0-987E-0E3B222C21BB}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ff.wpf_tools", "ff.wpf_tools\ff.wpf_tools.csproj", "{30591A66-8FF9-4069-A7CA-7CEC013D3D77}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +22,10 @@ Global
 		{6FA038B6-3FE0-4304-8420-DB165A151859}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FA038B6-3FE0-4304-8420-DB165A151859}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FA038B6-3FE0-4304-8420-DB165A151859}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30591A66-8FF9-4069-A7CA-7CEC013D3D77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30591A66-8FF9-4069-A7CA-7CEC013D3D77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30591A66-8FF9-4069-A7CA-7CEC013D3D77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30591A66-8FF9-4069-A7CA-7CEC013D3D77}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

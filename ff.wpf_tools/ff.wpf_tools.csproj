@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0-windows;net48</TargetFrameworks>
+    <UseWPF>true</UseWPF>
+    <SignAssembly>False</SignAssembly>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageProjectUrl>https://github.com/spadapet/ff_game_tools</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/spadapet/ff_game_tools.git</RepositoryUrl>
+    <PackageTags>mvvm;wpf;utility</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Description>Super basic MVVM utilities for WPF</Description>
+    <Authors>spadapet</Authors>
+    <Company>Peter Spada</Company>
+  </PropertyGroup>
+
+</Project>
