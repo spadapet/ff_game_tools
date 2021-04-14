@@ -5,31 +5,66 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:convert="clr-namespace:ff.resource_editor.converters"
     xmlns:model="clr-namespace:ff.resource_editor.model"
     d:DataContext="{d:DesignInstance Type=model:main_vm, IsDesignTimeCreatable=True}"
     DataContext="{Binding view_model, RelativeSource={RelativeSource Mode=Self}}"
     mc:Ignorable="d"
     d:Height="450"
-    d:Width="800"
-    Title="Resource Editor">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-
-        <Menu>
-            <MenuItem Header="File">
-                <MenuItem Header="Exit" InputGestureText="Alt+F4" Command="{Binding exit_command}" />
-            </MenuItem>
-        </Menu>
-        
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="128" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Border Grid.Column="1" Background="Black"></Border>
+    d:Width="800">
+    <Window.Resources>
+        <convert:window_title_converter x:Key="window_title_converter" />
+    </Window.Resources>
+    <Window.Title>
+        <MultiBinding Converter="{StaticResource window_title_converter}" ConverterParameter="Resource Editor">
+            <Binding Path="project" />
+            <Binding Path="project.file" />
+            <Binding Path="project.dirty" />
+        </MultiBinding>
+    </Window.Title>
+    <Grid Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="256" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Border BorderBrush="{DynamicResource ToolBarMenuBorder}" BorderThickness="0,0,0,1" Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}">
+                <ToolBarTray IsLocked="True" Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}">
+                    <ToolBar Background="Transparent">
+                        <Button ToolTip="New (Ctrl+N)" Command="{Binding new_command}">
+                            <Rectangle Width="16" Height="16" Fill="{StaticResource new_icon}" />
+                        </Button>
+                        <Button ToolTip="Open (Ctrl+S)" Command="{Binding open_command}">
+                            <Rectangle Width="16" Height="16" Fill="{StaticResource open_icon}" />
+                        </Button>
+                        <Button ToolTip="Save (Ctrl+S)" Command="{Binding save_command}">
+                            <Rectangle Width="16" Height="16" Fill="{StaticResource save_icon}" />
+                        </Button>
+                        <Separator />
+                        <Button ToolTip="Add source file (Insert)" Command="{Binding add_source_command}">
+                            <Rectangle Width="16" Height="16" Fill="{StaticResource add_icon}" />
+                        </Button>
+                        <Button ToolTip="Remove source file (Delete)" Command="{Binding remove_source_command}">
+                            <Rectangle Width="16" Height="16" Fill="{StaticResource remove_icon}" />
+                        </Button>
+                    </ToolBar>
+                </ToolBarTray>
+            </Border>
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="128" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <ListBox Grid.Row="0" Margin="4" ItemsSource="{Binding project.sources}" d:ItemsSource="{d:SampleData}" />
+                <TreeView Grid.Row="1" Margin="4" d:ItemsSource="{d:SampleData}" />
+            </Grid>
+        </Grid>
+        <Grid Grid.Column="1">
+            <Border Background="Black"/>
         </Grid>
     </Grid>
 </Window>

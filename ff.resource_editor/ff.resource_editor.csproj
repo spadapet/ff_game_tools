@@ -12,4 +12,11 @@
     <ProjectReference Include="..\ff.wpf_tools\ff.wpf_tools.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Page Update="ui\custom_control_resources.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
 </Project>

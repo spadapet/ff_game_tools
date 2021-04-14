@@ -1,12 +1,15 @@
-﻿using System.IO;
+﻿using ff.wpf_tools;
+using System;
+using System.IO;
 using System.Runtime.Serialization;
 
 namespace ff.resource_editor.model
 {
     [DataContract]
-    internal class source_file : ff.wpf_tools.property_notifier
+    internal class source_file : property_notifier
     {
         private string path_;
+        private bool dirty_;
 
         public source_file()
         {
@@ -27,5 +30,16 @@ namespace ff.resource_editor.model
         }
 
         public string name => Path.GetFileName(this.path);
+
+        public bool dirty
+        {
+            get => this.dirty;
+            set => this.set_property(ref this.dirty_, value);
+        }
+
+        public void save()
+        {
+            this.dirty = false;
+        }
     }
 }
