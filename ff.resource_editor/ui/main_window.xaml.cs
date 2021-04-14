@@ -1,4 +1,5 @@
 ﻿using ff.resource_editor.model;
+using System.ComponentModel;
 
 namespace ff.resource_editor.ui
 {
@@ -10,6 +11,15 @@ namespace ff.resource_editor.ui
         {
             this.view_model = new();
             this.InitializeComponent();
+        }
+
+        private void on_closing(object sender, CancelEventArgs args)
+        {
+            args.Cancel = args.Cancel || !this.view_model.check_dirty();
+
+            if (!args.Cancel)
+            {
+            }
         }
     }
 }

@@ -60,4 +60,18 @@
         </DrawingBrush.Drawing>
     </DrawingBrush>
 
+  <DrawingBrush x:Key="save_as_icon">
+    <DrawingBrush.Drawing>
+      <DrawingGroup>
+        <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M0,-0.000199999999999534L0,10.4218 2.5,13.6668 4,11.7298 4,15.9998 8.414,15.9998 16,15.9998 16,5.9998 14,4.0008 5,4.0008 5,-0.000199999999999534z" />
+        <GeometryDrawing Brush="#FF00529C" Geometry="F1M12,5L10,5 10,7 12,7z" />
+        <GeometryDrawing Brush="#FF00529C" Geometry="F1M13,5L13,9 8,9 8,5 5,5 5,15 15,15 15,7z" />
+        <GeometryDrawing Brush="#FF00529C" Geometry="F1M4,2.969L1,2.969 1,1 4,1z" />
+        <GeometryDrawing Brush="#FF00529C" Geometry="F1M4,4L1,4 1,9 4,9z" />
+        <GeometryDrawing Brush="#FF00529C" Geometry="F1M2.5,12L4,10 1,10z" />
+        <GeometryDrawing Brush="#FFF0EFF1" Geometry="F1M12,5L12,7 10,7 10,5 8,5 8,9 13,9 13,5z" />
+      </DrawingGroup>
+    </DrawingBrush.Drawing>
+  </DrawingBrush>
+
 </ResourceDictionary>

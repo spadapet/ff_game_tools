@@ -5,18 +5,12 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <Nullable>disable</Nullable>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Efficient.Json" Version="1.1.4" />
     <ProjectReference Include="..\ff.wpf_tools\ff.wpf_tools.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="ui\custom_control_resources.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
 
 </Project>
