@@ -1,6 +1,5 @@
 ﻿namespace ff.wpf_tools
 {
-    [System.Runtime.Serialization.DataContract]
     public abstract class property_notifier : System.ComponentModel.INotifyPropertyChanging, System.ComponentModel.INotifyPropertyChanged
     {
         private event System.ComponentModel.PropertyChangingEventHandler property_changing;

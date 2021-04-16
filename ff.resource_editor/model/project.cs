@@ -1,17 +1,19 @@
-﻿using System;
+﻿using ff.wpf_tools;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ff.resource_editor.model
 {
     [DataContract]
-    internal class project : ff.wpf_tools.property_notifier
+    internal class project : property_notifier
     {
         private readonly ObservableCollection<source_file> sources_;
         private string file_;
@@ -19,19 +21,7 @@ namespace ff.resource_editor.model
 
         public project()
         {
-            if (ff.wpf_tools.wpf_utility.design_mode)
-            {
-                this.sources_ = new()
-                {
-                    new("c:\\foo\\bar.res.json"),
-                    new("c:\\hello world\\hi.json")
-                };
-            }
-            else
-            {
-                this.sources_ = new();
-            }
-
+            this.sources_ = new();
             this.sources_.CollectionChanged += this.on_sources_changed;
             this.file_ = string.Empty;
         }
@@ -52,35 +42,48 @@ namespace ff.resource_editor.model
             private set => this.set_property(ref this.file_, value ?? string.Empty);
         }
 
-        public static project load(string file)
+        public static async Task<project> load_async(string file)
         {
-            string json_project = File.ReadAllText(file);
-            project project = Efficient.Json.JsonValue.StringToObject<project>(json_project);
-            project.file = file;
-            project.dirty = false;
+            string json_project = await File.ReadAllTextAsync(file, Encoding.UTF8);
+            project project = await Task.Run(() =>
+            {
+                project project_ = Efficient.Json.JsonValue.StringToObject<project>(json_project);
+                project_.file = file;
+                project_.dirty = false;
+                return project_;
+            });
+
             return project;
         }
 
-        public bool save(string file = null)
+        public async Task save_async(string file = null)
         {
-            bool status = true;
+            List<Exception> exceptions = new();
 
-            foreach (source_file source in this.sources)
+            foreach (source_file source in this.sources.ToArray())
             {
-                if (!source.save())
+                try
                 {
-                    status = false;
+                    await source.save_async();
+                }
+                catch (Exception ex)
+                {
+                    exceptions.Add(ex);
                 }
             }
 
-            string project_json = Efficient.Json.JsonValue.ObjectToString(this, true);
+            string project_json = await Task.Run(() => Efficient.Json.JsonValue.ObjectToString(this, true));
 
             file = file ?? this.file;
-            File.WriteAllText(file, project_json);
+            await File.WriteAllTextAsync(file, project_json, Encoding.UTF8);
             this.file = file;
-            this.dirty = false;
 
-            return status;
+            if (exceptions.Count > 0)
+            {
+                throw new AggregateException($"Save failed: {file}", exceptions);
+            }
+
+            this.dirty = false;
         }
 
         private void on_sources_changed(object sender, NotifyCollectionChangedEventArgs args)

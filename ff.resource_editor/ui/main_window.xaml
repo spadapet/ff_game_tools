@@ -7,14 +7,61 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:convert="clr-namespace:ff.resource_editor.converters"
     xmlns:model="clr-namespace:ff.resource_editor.model"
+    xmlns:ui="clr-namespace:ff.resource_editor.ui"
     d:DataContext="{d:DesignInstance Type=model:main_vm, IsDesignTimeCreatable=True}"
     DataContext="{Binding view_model, RelativeSource={RelativeSource Mode=Self}}"
     Closing="on_closing"
+    Loaded="on_loaded"
     mc:Ignorable="d"
     d:Height="450"
     d:Width="800">
   <Window.Resources>
     <convert:window_title_converter x:Key="window_title_converter" />
+
+    <Style x:Key="focus_visual_inner">
+      <Setter Property="Control.Template">
+        <Setter.Value>
+          <ControlTemplate>
+            <Rectangle Margin="2" StrokeDashArray="1 2" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" SnapsToDevicePixels="true" StrokeThickness="1"/>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+
+    <Style x:Key="toolbar_button_style" TargetType="{x:Type Button}">
+      <Setter Property="FocusVisualStyle" Value="{StaticResource focus_visual_inner}"/>
+      <Setter Property="SnapsToDevicePixels" Value="True" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="{x:Type Button}">
+            <Grid Background="Transparent">
+              <Border x:Name="border" Background="Transparent" />
+              <StackPanel Orientation="Horizontal" Margin="2">
+                <Rectangle x:Name="icon_rect" Width="24" Height="24" StrokeThickness="0" Fill="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=(ui:properties.Icon)}" />
+                <ContentPresenter x:Name="contentPresenter" Focusable="False" VerticalAlignment="Center" />
+              </StackPanel>
+            </Grid>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="true">
+                <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                <Setter Property="Opacity" TargetName="border" Value="0.25"/>
+                <Setter Property="Fill" TargetName="icon_rect" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=(ui:properties.IconHot)}"/>
+              </Trigger>
+              <Trigger Property="IsPressed" Value="true">
+                <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                <Setter Property="Opacity" TargetName="border" Value="1"/>
+                <Setter Property="Fill" TargetName="icon_rect" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=(ui:properties.IconHot)}"/>
+              </Trigger>
+              <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Background" TargetName="border" Value="Transparent"/>
+                <Setter Property="Fill" TargetName="icon_rect" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=(ui:properties.IconGray)}"/>
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+
   </Window.Resources>
   <Window.Title>
     <MultiBinding Converter="{StaticResource window_title_converter}" ConverterParameter="Resource Editor">
@@ -31,47 +78,130 @@
     <Grid Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
-        <RowDefinition/>
+        <RowDefinition Height="200"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="*"/>
       </Grid.RowDefinitions>
-      <ToolBarTray IsLocked="True" Background="{x:Null}">
-        <ToolBar Background="{x:Null}">
-          <Button HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding new_command}">
-            <Rectangle Height="16" Width="16" Fill="{DynamicResource new_icon}"/>
-          </Button>
-          <Button Command="{Binding open_command}">
-            <Rectangle Height="16" Width="16" Fill="{DynamicResource open_icon}"/>
-          </Button>
-          <Button Command="{Binding save_command}">
-            <Rectangle Height="16" Width="16" Fill="{DynamicResource save_icon}"/>
-          </Button>
-          <Button Command="{Binding save_as_command}">
-            <Rectangle Height="16" Width="16" Fill="{DynamicResource save_as_icon}"/>
-          </Button>
+      <ToolBarTray>
+        <ToolBar>
+          <Button
+            ToolTip="New project"
+            Command="{Binding new_command}"
+            Style="{StaticResource toolbar_button_style}"
+            ui:properties.Icon="{StaticResource new_icon}"
+            ui:properties.IconHot="{StaticResource new_icon_hot}"
+            ui:properties.IconGray="{StaticResource new_icon_gray}" />
+
+          <Button
+            ToolTip="Open project"
+            Command="{Binding open_command}"
+            Style="{StaticResource toolbar_button_style}"
+            ui:properties.Icon="{StaticResource open_icon}"
+            ui:properties.IconHot="{StaticResource open_icon_hot}"
+            ui:properties.IconGray="{StaticResource open_icon_gray}" />
+
+          <Button
+            ToolTip="Save project"
+            Command="{Binding save_command}"
+            Style="{StaticResource toolbar_button_style}"
+            ui:properties.Icon="{StaticResource save_icon}"
+            ui:properties.IconHot="{StaticResource save_icon_hot}"
+            ui:properties.IconGray="{StaticResource save_icon_gray}" />
+
+          <Button
+            ToolTip="Save project as"
+            Command="{Binding save_as_command}"
+            Style="{StaticResource toolbar_button_style}"
+            ui:properties.Icon="{StaticResource save_as_icon}"
+            ui:properties.IconHot="{StaticResource save_as_icon_hot}"
+            ui:properties.IconGray="{StaticResource save_as_icon_gray}" />
+
           <Separator/>
-          <Button Command="{Binding add_source_command}">
-            <Rectangle Height="16" Width="16" Fill="{DynamicResource add_icon}"/>
-          </Button>
-          <Button Command="{Binding remove_source_command}" CommandParameter="{Binding SelectedItems, ElementName=source_file_list}">
-            <Rectangle Height="16" Width="16" Fill="{DynamicResource remove_icon}"/>
-          </Button>
+
+          <Button
+            ToolTip="Add source file"
+            Command="{Binding add_source_command}"
+            Style="{StaticResource toolbar_button_style}"
+            ui:properties.Icon="{StaticResource add_source_icon}"
+            ui:properties.IconHot="{StaticResource add_source_icon_hot}"
+            ui:properties.IconGray="{StaticResource add_source_icon_gray}" />
+
+          <Button
+            ToolTip="Remove source file"
+            CommandParameter="{Binding edit_source}"
+            Command="{Binding remove_source_command}"
+            Style="{StaticResource toolbar_button_style}"
+            ui:properties.Icon="{StaticResource remove_source_icon}"
+            ui:properties.IconHot="{StaticResource remove_source_icon_hot}"
+            ui:properties.IconGray="{StaticResource remove_source_icon_gray}" />
+
         </ToolBar>
       </ToolBarTray>
-      <Grid Grid.Row="1">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="200"/>
-          <RowDefinition/>
-        </Grid.RowDefinitions>
-        <ListView x:Name="source_file_list" Margin="4" ItemsSource="{Binding project.sources}" SelectionMode="Extended">
-          <ListView.View>
-            <GridView AllowsColumnReorder="False">
-              <GridViewColumn Header="Name" Width="80" DisplayMemberBinding="{Binding name}" />
-              <GridViewColumn Header="Path" DisplayMemberBinding="{Binding path}" />
-            </GridView>
-          </ListView.View>
-        </ListView>
-        <TreeView Grid.Row="1" Margin="4" ItemsSource="{Binding project.sources}" />
-      </Grid>
+
+      <ListView x:Name="source_file_list" Grid.Row="1" Margin="4" ItemsSource="{Binding project.sources}" SelectedItem="{Binding edit_source}" SelectionMode="Single">
+        <ListView.View>
+          <GridView AllowsColumnReorder="False">
+            <GridViewColumn Header="Name" Width="80" DisplayMemberBinding="{Binding name}" />
+            <GridViewColumn Header="Path" DisplayMemberBinding="{Binding file}" />
+          </GridView>
+        </ListView.View>
+      </ListView>
+
+      <ToolBarTray Grid.Row="2">
+        <ToolBar>
+          <Button
+            ToolTip="Add resource"
+            Click="on_add_resource_click"
+            ClickMode="Release"
+            Style="{StaticResource toolbar_button_style}"
+            ui:properties.Icon="{StaticResource add_icon}"
+            ui:properties.IconHot="{StaticResource add_icon_hot}"
+            ui:properties.IconGray="{StaticResource add_icon_gray}">
+            <Button.ContextMenu>
+              <ContextMenu>
+                <MenuItem Header="Localized values" />
+                <MenuItem Header="Input mapping" />
+                <Separator />
+                <MenuItem Header="Shader" />
+                <MenuItem Header="Texture" />
+                <MenuItem Header="Palette" />
+                <MenuItem Header="Sprites" />
+                <MenuItem Header="Animation" />
+                <MenuItem Header="Font file" />
+                <MenuItem Header="Sprite font" />
+                <Separator />
+                <MenuItem Header="Effect" />
+                <MenuItem Header="Music" />
+                <Separator />
+                <MenuItem Header="XAML file" />
+                <MenuItem Header="XAML font file" />
+                <Separator />
+                <MenuItem Header="Other file" />
+              </ContextMenu>
+            </Button.ContextMenu>
+          </Button>
+
+          <Button
+            ToolTip="Delete resource"
+            Command="{Binding delete_resource_command}"
+            CommandParameter="{Binding edit_resource}"
+            Style="{StaticResource toolbar_button_style}"
+            ui:properties.Icon="{StaticResource delete_icon}"
+            ui:properties.IconHot="{StaticResource delete_icon_hot}"
+            ui:properties.IconGray="{StaticResource delete_icon_gray}" />
+
+        </ToolBar>
+      </ToolBarTray>
+
+      <ListView x:Name="resource_list" Grid.Row="3" Margin="4" ItemsSource="{Binding edit_source.resources}" SelectedItem="{Binding edit_resource}" SelectionMode="Single">
+        <ListView.View>
+          <GridView AllowsColumnReorder="False">
+            <GridViewColumn Header="Name" Width="80" DisplayMemberBinding="{Binding name}" />
+            <GridViewColumn Header="Type" DisplayMemberBinding="{Binding type}" />
+          </GridView>
+        </ListView.View>
+      </ListView>
     </Grid>
-    <Border Grid.Column="1" Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}"/>
+    <Border Grid.Column="1" Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
   </Grid>
 </Window>

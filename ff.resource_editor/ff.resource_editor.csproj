@@ -9,8 +9,68 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="assets\icons\add.png" />
+    <None Remove="assets\icons\delete.png" />
+    <None Remove="assets\icons\documents-add2.png" />
+    <None Remove="assets\icons\documents-delete2.png" />
+    <None Remove="assets\icons\documents-new.png" />
+    <None Remove="assets\icons\folder_action_open.png" />
+    <None Remove="assets\icons\save.png" />
+    <None Remove="assets\icons\save_as.png" />
+    <None Remove="assets\icons_gray\add.png" />
+    <None Remove="assets\icons_gray\delete.png" />
+    <None Remove="assets\icons_gray\documents-add2.png" />
+    <None Remove="assets\icons_gray\documents-delete2.png" />
+    <None Remove="assets\icons_gray\documents-new.png" />
+    <None Remove="assets\icons_gray\folder_action_open.png" />
+    <None Remove="assets\icons_gray\save.png" />
+    <None Remove="assets\icons_gray\save_as.png" />
+    <None Remove="assets\icons_hot\add.png" />
+    <None Remove="assets\icons_hot\delete.png" />
+    <None Remove="assets\icons_hot\documents-add2.png" />
+    <None Remove="assets\icons_hot\documents-delete2.png" />
+    <None Remove="assets\icons_hot\documents-new.png" />
+    <None Remove="assets\icons_hot\folder_action_open.png" />
+    <None Remove="assets\icons_hot\save.png" />
+    <None Remove="assets\icons_hot\save_as.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="assets\icons\add.png" />
+    <Resource Include="assets\icons\delete.png" />
+    <Resource Include="assets\icons_gray\add.png" />
+    <Resource Include="assets\icons_gray\delete.png" />
+    <Resource Include="assets\icons_hot\add.png" />
+    <Resource Include="assets\icons_hot\delete.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="assets\icons\documents-add2.png" />
+    <Resource Include="assets\icons\documents-delete2.png" />
+    <Resource Include="assets\icons\documents-new.png" />
+    <Resource Include="assets\icons\folder_action_open.png" />
+    <Resource Include="assets\icons\save.png" />
+    <Resource Include="assets\icons\save_as.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Efficient.Json" Version="1.1.4" />
     <ProjectReference Include="..\ff.wpf_tools\ff.wpf_tools.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="assets\icons_gray\documents-add2.png" />
+    <Resource Include="assets\icons_gray\documents-delete2.png" />
+    <Resource Include="assets\icons_gray\documents-new.png" />
+    <Resource Include="assets\icons_gray\folder_action_open.png" />
+    <Resource Include="assets\icons_gray\save.png" />
+    <Resource Include="assets\icons_gray\save_as.png" />
+    <Resource Include="assets\icons_hot\documents-add2.png" />
+    <Resource Include="assets\icons_hot\documents-delete2.png" />
+    <Resource Include="assets\icons_hot\documents-new.png" />
+    <Resource Include="assets\icons_hot\folder_action_open.png" />
+    <Resource Include="assets\icons_hot\save.png" />
+    <Resource Include="assets\icons_hot\save_as.png" />
   </ItemGroup>
 
 </Project>

@@ -5,6 +5,7 @@ using System.Collections;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -13,6 +14,8 @@ namespace ff.resource_editor.model
     internal class main_vm : property_notifier
     {
         private project project_;
+        private source_file edit_source_;
+        private resource edit_resource_;
 
         public main_vm()
         {
@@ -25,17 +28,29 @@ namespace ff.resource_editor.model
             set => this.set_property(ref this.project_, value ?? new());
         }
 
-        public ICommand new_command => new delegate_command(() =>
+        public source_file edit_source
         {
-            if (this.check_dirty())
+            get => this.edit_source_;
+            set => this.set_property(ref this.edit_source_, value);
+        }
+
+        public resource edit_resource
+        {
+            get => this.edit_resource_;
+            set => this.set_property(ref this.edit_resource_, value);
+        }
+
+        public ICommand new_command => new delegate_command(async () =>
+        {
+            if (await this.check_dirty())
             {
                 this.project = new();
             }
         });
 
-        public ICommand open_command => new delegate_command(() =>
+        public ICommand open_command => new delegate_command(async () =>
         {
-            if (this.check_dirty())
+            if (await this.check_dirty())
             {
                 OpenFileDialog dialog = new OpenFileDialog
                 {
@@ -48,7 +63,7 @@ namespace ff.resource_editor.model
                 {
                     try
                     {
-                        this.project = project.load(dialog.FileName);
+                        this.project = await project.load_async(dialog.FileName);
                     }
                     catch (Exception ex)
                     {
@@ -58,13 +73,13 @@ namespace ff.resource_editor.model
             }
         });
 
-        public ICommand save_command => new delegate_command((object parameter) =>
+        public ICommand save_command => new delegate_command(async (object parameter) =>
         {
             if (this.project.has_file)
             {
                 try
                 {
-                    this.project.save();
+                    await this.project.save_async();
                 }
                 catch (Exception ex)
                 {
@@ -77,7 +92,7 @@ namespace ff.resource_editor.model
             }
         });
 
-        public ICommand save_as_command => new delegate_command(() =>
+        public ICommand save_as_command => new delegate_command(async () =>
         {
             SaveFileDialog dialog = new SaveFileDialog
             {
@@ -96,7 +111,7 @@ namespace ff.resource_editor.model
             {
                 try
                 {
-                    this.project.save(dialog.FileName);
+                    await this.project.save_async(dialog.FileName);
                 }
                 catch (Exception ex)
                 {
@@ -105,7 +120,7 @@ namespace ff.resource_editor.model
             }
         });
 
-        public ICommand add_source_command => new delegate_command(() =>
+        public ICommand add_source_command => new delegate_command(async () =>
         {
             OpenFileDialog dialog = new OpenFileDialog
             {
@@ -119,7 +134,7 @@ namespace ff.resource_editor.model
             {
                 foreach (string file in dialog.FileNames)
                 {
-                    source_file source = new(file);
+                    source_file source = await source_file.load_async(file);
                     if (!this.project.sources.Contains(source))
                     {
                         this.project.sources.Add(source);
@@ -128,7 +143,8 @@ namespace ff.resource_editor.model
             }
         });
 
-        public ICommand remove_source_command => new delegate_command((object parameter) =>
+        private delegate_command remove_source_command_;
+        public ICommand remove_source_command => this.remove_source_command_ ??= new delegate_command((object parameter) =>
         {
             if (parameter is IEnumerable sources)
             {
@@ -138,9 +154,22 @@ namespace ff.resource_editor.model
                     Debug.Assert(removed);
                 }
             }
+        },
+        (object parameter) =>
+        {
+            return parameter is source_file;
         });
 
-        public bool check_dirty()
+        private delegate_command delete_resource_command_;
+        public ICommand delete_resource_command => this.delete_resource_command_ ??= new delegate_command((object parameter) =>
+        {
+        },
+        (object parameter) =>
+        {
+            return parameter is resource;
+        });
+
+        public async Task<bool> check_dirty()
         {
             if (this.project.dirty)
             {
@@ -150,7 +179,15 @@ namespace ff.resource_editor.model
                         return false;
 
                     case MessageBoxResult.Yes:
-                        return this.project.save();
+                        try
+                        {
+                            await this.project.save_async();
+                        }
+                        catch (Exception ex)
+                        {
+                            return false;
+                        }
+                        break;
                 }
             }
 
