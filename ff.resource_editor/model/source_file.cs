@@ -1,4 +1,5 @@
-﻿using ff.wpf_tools;
+﻿using Efficient.Json;
+using ff.wpf_tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,35 +15,54 @@ namespace ff.resource_editor.model
     {
         private string file_;
         private bool dirty_;
+        private List<JsonValue> extra_root_values;
         private ObservableCollection<resource> resources_;
 
         public source_file()
         {
             this.file_ = string.Empty;
-
-            if (wpf_utility.design_mode)
-            {
-                this.resources_ = new()
-                {
-                    new(this, "name_1", "texture"),
-                    new(this, "name_2", "sprites"),
-                    new(this, "name_3", "animation"),
-                };
-            }
-            else
-            {
-                this.resources_ = new();
-            }
+            this.extra_root_values = new();
+            this.resources_ = new();
         }
 
         public static async Task<source_file> load_async(string file)
         {
-            source_file source = new()
-            {
-                file = file,
-            };
+            return await load_into_async(new(), file);
+        }
 
-            return await Task.FromResult(source);
+        public static async Task<source_file> load_into_async(source_file source, string file)
+        {
+            source.resources_.Clear();
+            source.extra_root_values.Clear();
+
+            if (File.Exists(file))
+            {
+                JsonValue root = await Task.Run(() => JsonValue.StringToValue(new StreamReader(file, detectEncodingFromByteOrderMarks: true)));
+                if (root.IsObject)
+                {
+                    foreach (KeyValuePair<string, JsonValue> i in root.Object)
+                    {
+                        resource resource = null;
+
+                        if (i.Value.IsObject)
+                        {
+                            resource = await resource.load_async(source, i.Key, i.Value);
+                        }
+
+                        if (resource != null)
+                        {
+                            source.resources.Add(resource);
+                        }
+                        else
+                        {
+                            source.extra_root_values.Add(i.Value);
+                        }
+                    }
+                }
+            }
+
+            source.dirty = false;
+            return source;
         }
 
         public async Task save_async()
@@ -77,6 +97,8 @@ namespace ff.resource_editor.model
                 if (this.set_property(ref this.file_, value))
                 {
                     this.on_property_changed(nameof(this.name));
+
+                    source_file.load_into_async(this, value).fire_and_forget("source_file.file");
                 }
             }
         }

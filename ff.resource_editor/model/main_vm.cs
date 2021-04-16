@@ -31,13 +31,25 @@ namespace ff.resource_editor.model
         public source_file edit_source
         {
             get => this.edit_source_;
-            set => this.set_property(ref this.edit_source_, value);
+            set
+            {
+                if (this.set_property(ref this.edit_source_, value))
+                {
+                    this.remove_source_command_?.update_can_execute();
+                }
+            }
         }
 
         public resource edit_resource
         {
             get => this.edit_resource_;
-            set => this.set_property(ref this.edit_resource_, value);
+            set
+            {
+                if (this.set_property(ref this.edit_resource_, value))
+                {
+                    this.delete_resource_command_?.update_can_execute();
+                }
+            }
         }
 
         public ICommand new_command => new delegate_command(async () =>
