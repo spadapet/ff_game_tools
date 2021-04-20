@@ -25,19 +25,28 @@ namespace ff.resource_editor.model
             this.resources_ = new();
         }
 
-        public static async Task<source_file> load_async(string file)
+        [OnDeserialized]
+        public async void deserialized(StreamingContext streaming_context)
         {
-            return await load_into_async(new(), file);
+            await this.load_file_async();
         }
 
-        public static async Task<source_file> load_into_async(source_file source, string file)
+        public static async Task<source_file> load_async(string file)
         {
-            source.resources_.Clear();
-            source.extra_root_values.Clear();
+            source_file source = new();
+            source.file = file;
+            await source.load_file_async();
+            return source;
+        }
 
-            if (File.Exists(file))
+        public async Task load_file_async()
+        {
+            this.resources_.Clear();
+            this.extra_root_values.Clear();
+
+            if (File.Exists(this.file))
             {
-                JsonValue root = await Task.Run(() => JsonValue.StringToValue(new StreamReader(file, detectEncodingFromByteOrderMarks: true)));
+                JsonValue root = await Task.Run(() => JsonValue.StringToValue(new StreamReader(this.file, detectEncodingFromByteOrderMarks: true)));
                 if (root.IsObject)
                 {
                     foreach (KeyValuePair<string, JsonValue> i in root.Object)
@@ -46,23 +55,20 @@ namespace ff.resource_editor.model
 
                         if (i.Value.IsObject)
                         {
-                            resource = await resource.load_async(source, i.Key, i.Value);
+                            resource = await resource.load_async(this, i.Key, i.Value);
                         }
 
                         if (resource != null)
                         {
-                            source.resources.Add(resource);
+                            this.resources.Add(resource);
                         }
                         else
                         {
-                            source.extra_root_values.Add(i.Value);
+                            this.extra_root_values.Add(i.Value);
                         }
                     }
                 }
             }
-
-            source.dirty = false;
-            return source;
         }
 
         public async Task save_async()
@@ -97,13 +103,12 @@ namespace ff.resource_editor.model
                 if (this.set_property(ref this.file_, value))
                 {
                     this.on_property_changed(nameof(this.name));
-
-                    source_file.load_into_async(this, value).fire_and_forget("source_file.file");
                 }
             }
         }
 
         public string name => Path.GetFileName(this.file);
+        public string directory => Path.GetDirectoryName(this.file);
 
         public bool dirty
         {

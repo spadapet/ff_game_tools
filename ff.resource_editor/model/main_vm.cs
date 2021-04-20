@@ -2,6 +2,8 @@
 using Microsoft.Win32;
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -16,10 +18,13 @@ namespace ff.resource_editor.model
         private project project_;
         private source_file edit_source_;
         private resource edit_resource_;
+        private edit_tab active_edit_tab_;
+        private ObservableCollection<edit_tab> edit_tabs_;
 
         public main_vm()
         {
-            this.project_ = new project();
+            this.project_ = new();
+            this.edit_tabs_ = new();
         }
 
         public project project
@@ -35,10 +40,13 @@ namespace ff.resource_editor.model
             {
                 if (this.set_property(ref this.edit_source_, value))
                 {
+                    this.on_property_changed(nameof(this.has_edit_source));
                     this.remove_source_command_?.update_can_execute();
                 }
             }
         }
+
+        public bool has_edit_source => this.edit_source_ != null;
 
         public resource edit_resource
         {
@@ -48,6 +56,30 @@ namespace ff.resource_editor.model
                 if (this.set_property(ref this.edit_resource_, value))
                 {
                     this.delete_resource_command_?.update_can_execute();
+                }
+            }
+        }
+
+        public IList<edit_tab> edit_tabs => this.edit_tabs_;
+
+        public edit_tab active_edit_tab
+        {
+            get => this.active_edit_tab_;
+            set
+            {
+                if (this.active_edit_tab_ != value)
+                {
+                    if (this.active_edit_tab_ != null)
+                    {
+                        this.active_edit_tab_.active = false;
+                    }
+
+                    this.set_property(ref this.active_edit_tab_, value);
+
+                    if (this.active_edit_tab_ != null)
+                    {
+                        this.active_edit_tab_.active = true;
+                    }
                 }
             }
         }
@@ -155,6 +187,35 @@ namespace ff.resource_editor.model
             }
         });
 
+        public void open_edit_tab(resource resource)
+        {
+            resource.editor ??= edit_tab.create(this, resource);
+
+            if (!this.edit_tabs_.Contains(resource.editor))
+            {
+                this.edit_tabs_.Add(resource.editor);
+            }
+
+            this.active_edit_tab = resource.editor;
+        }
+
+        public void close_edit_tab(edit_tab editor)
+        {
+            int i = this.edit_tabs_.IndexOf(editor);
+
+            if (this.active_edit_tab_ == editor)
+            {
+                this.active_edit_tab = null;
+            }
+
+            editor.resource.editor = null;
+
+            if (this.edit_tabs_.Remove(editor) && this.edit_tabs.Count > 0 && this.active_edit_tab == null)
+            {
+                this.active_edit_tab = this.edit_tabs_[i >= 0 && i < this.edit_tabs_.Count ? i : this.edit_tabs_.Count - 1];
+            }
+        }
+
         private delegate_command remove_source_command_;
         public ICommand remove_source_command => this.remove_source_command_ ??= new delegate_command((object parameter) =>
         {
@@ -197,6 +258,7 @@ namespace ff.resource_editor.model
                         }
                         catch (Exception ex)
                         {
+                            Debug.Fail(ex.Message);
                             return false;
                         }
                         break;

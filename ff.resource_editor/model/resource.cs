@@ -9,6 +9,7 @@ namespace ff.resource_editor.model
     {
         private source_file source_;
         private resource_type type_;
+        private edit_tab editor_;
         private string name_;
 
         protected resource(source_file source, string name, resource_type type)
@@ -22,6 +23,20 @@ namespace ff.resource_editor.model
         public resource_type type => this.type_;
         public string type_name => resource_type_utility.name_of(this.type_);
         public string name => this.name_;
+
+        public edit_tab editor
+        {
+            get => this.editor_;
+            set
+            {
+                if (this.set_property(ref this.editor_, value))
+                {
+                    this.on_property_changed(nameof(this.editing));
+                }
+            }
+        }
+
+        public bool editing => this.editor_ != null;
 
         public async static Task<resource> load_async(source_file source, string name, JsonValue value)
         {

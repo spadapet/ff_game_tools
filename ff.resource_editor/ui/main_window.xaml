@@ -62,6 +62,103 @@
       </Setter>
     </Style>
 
+    <!-- Panel that owns all of the tab buttons and computes layout -->
+    <ItemsPanelTemplate x:Key="TabItemsPanelTemplate">
+      <TabPanel Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+    </ItemsPanelTemplate>
+
+    <!-- Simple look for the close button -->
+    <ControlTemplate x:Key="TabCloseButtonTemplate" TargetType="{x:Type Button}">
+      <Border x:Name="BorderBack" Background="{TemplateBinding Background}">
+        <ContentPresenter Focusable="False" HorizontalAlignment="Center" VerticalAlignment="Center" />
+      </Border>
+      <ControlTemplate.Triggers>
+        <Trigger Property="IsMouseOver" Value="False">
+          <Setter TargetName="BorderBack" Property="Background" Value="Transparent" />
+        </Trigger>
+      </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!-- Title and close button -->
+    <DataTemplate x:Key="TabButtonContentTemplate" DataType="{x:Type model:edit_tab}">
+      <Grid x:Name="RootGrid">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" MinWidth="48" />
+          <ColumnDefinition Width="16" />
+        </Grid.ColumnDefinitions>
+        <TextBlock
+          Grid.Column="0"
+          Margin="4"
+          HorizontalAlignment="Center"
+          VerticalAlignment="Center"
+          Text="{Binding tab_name, Mode=OneWay}" />
+        <Button
+          x:Name="CloseButton"
+          Grid.Column="1"
+          Width="16"
+          Focusable="False"
+          Background="#4FFF0000"
+          Command="{Binding close_command}"
+          Template="{StaticResource TabCloseButtonTemplate}"
+          Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}">
+          <Path Data="M 0,0 L 8,8 M 0,8 L 8,0" StrokeThickness="1" Stroke="{Binding Foreground, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" />
+        </Button>
+      </Grid>
+      <DataTemplate.Triggers>
+        <MultiDataTrigger>
+          <MultiDataTrigger.Conditions>
+            <Condition Binding="{Binding active, Mode=OneWay}" Value="False" />
+            <Condition Binding="{Binding IsMouseOver, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" Value="False" />
+          </MultiDataTrigger.Conditions>
+          <Setter TargetName="CloseButton" Property="Visibility" Value="Collapsed" />
+        </MultiDataTrigger>
+        <DataTrigger Binding="{Binding active, Mode=OneWay}" Value="False">
+          <Setter TargetName="CloseButton" Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" />
+        </DataTrigger>
+      </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <!-- Look of the whole tab button -->
+    <ControlTemplate x:Key="TabButtonTemplate" TargetType="{x:Type Button}">
+      <Grid SnapsToDevicePixels="True">
+        <Border x:Name="BorderBack" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+          <ContentPresenter Focusable="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        </Border>
+      </Grid>
+    </ControlTemplate>
+
+    <DataTemplate x:Key="TabItemTemplate" DataType="{x:Type model:edit_tab}">
+      <Button
+        x:Name="RootButton"
+        Selector.IsSelected="{Binding active, Mode=OneWay}"
+        Command="{Binding activate_command}"
+        Focusable="False"
+        BorderThickness="1,1,1,0"
+        BorderBrush="Transparent"
+        Content="{Binding}"
+        ToolTip="{Binding tab_tooltip}"
+        Template="{StaticResource TabButtonTemplate}"
+        ContentTemplate="{StaticResource TabButtonContentTemplate}"
+        Foreground="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}"
+        Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+
+      <!-- Change colors for an active tab, the default colors are for inactive -->
+      <DataTemplate.Triggers>
+        <DataTrigger Binding="{Binding active}" Value="True">
+          <Setter TargetName="RootButton" Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
+          <Setter TargetName="RootButton" Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
+          <Setter TargetName="RootButton" Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
+        </DataTrigger>
+        <MultiDataTrigger>
+          <MultiDataTrigger.Conditions>
+            <Condition Binding="{Binding active, Mode=OneWay}" Value="False" />
+            <Condition Binding="{Binding IsMouseOver, ElementName=RootButton}" Value="True" />
+          </MultiDataTrigger.Conditions>
+          <Setter TargetName="RootButton" Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" />
+        </MultiDataTrigger>
+      </DataTemplate.Triggers>
+    </DataTemplate>
+
   </Window.Resources>
   <Window.Title>
     <MultiBinding Converter="{StaticResource window_title_converter}" ConverterParameter="Resource Editor">
@@ -72,7 +169,7 @@
   </Window.Title>
   <Grid>
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="300"/>
+      <ColumnDefinition Width="400"/>
       <ColumnDefinition/>
     </Grid.ColumnDefinitions>
     <Grid Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
@@ -153,6 +250,7 @@
             ToolTip="Add resource"
             Click="on_add_resource_click"
             ClickMode="Release"
+            IsEnabled="{Binding has_edit_source}"
             Style="{StaticResource toolbar_button_style}"
             ui:properties.Icon="{StaticResource add_icon}"
             ui:properties.IconHot="{StaticResource add_icon_hot}"
@@ -194,14 +292,33 @@
       </ToolBarTray>
 
       <ListView x:Name="resource_list" Grid.Row="3" Margin="4" ItemsSource="{Binding edit_source.resources}" SelectedItem="{Binding edit_resource}" SelectionMode="Single">
+        <ListView.Resources>
+          <Style TargetType="ListViewItem">
+            <EventSetter Event="MouseDoubleClick" Handler="resource_list_item_mouse_double_click" />
+          </Style>
+        </ListView.Resources>
         <ListView.View>
           <GridView AllowsColumnReorder="False">
             <GridViewColumn Header="Name" Width="80" DisplayMemberBinding="{Binding name}" />
             <GridViewColumn Header="Type" DisplayMemberBinding="{Binding type_name}" />
+            <GridViewColumn Header="Editing" DisplayMemberBinding="{Binding editing}" />
           </GridView>
         </ListView.View>
       </ListView>
     </Grid>
-    <Border Grid.Column="1" Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+    <Grid Grid.Column="1" Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
+
+      <ItemsControl
+          x:Name="tab_items"
+          Grid.Row="0"
+          Focusable="False"
+          ItemsSource="{Binding edit_tabs}"
+          ItemsPanel="{StaticResource TabItemsPanelTemplate}"
+          ItemTemplate="{StaticResource TabItemTemplate}" />
+    </Grid>
   </Grid>
 </Window>

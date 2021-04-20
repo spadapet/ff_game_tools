@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace ff.resource_editor.ui
 {
@@ -127,6 +128,12 @@ namespace ff.resource_editor.ui
         private void on_add_resource_click(object sender, RoutedEventArgs args)
         {
             ((Button)sender).ContextMenu.IsOpen = true;
+        }
+
+        private void resource_list_item_mouse_double_click(object sender, MouseButtonEventArgs args)
+        {
+            resource resource = (resource)((FrameworkElement)sender).DataContext;
+            this.view_model.open_edit_tab(resource);
         }
     }
 }
