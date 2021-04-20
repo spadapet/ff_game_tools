@@ -42,23 +42,12 @@
     <Resource Include="assets\icons_gray\delete.png" />
     <Resource Include="assets\icons_hot\add.png" />
     <Resource Include="assets\icons_hot\delete.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Resource Include="assets\icons\documents-add2.png" />
     <Resource Include="assets\icons\documents-delete2.png" />
     <Resource Include="assets\icons\documents-new.png" />
     <Resource Include="assets\icons\folder_action_open.png" />
     <Resource Include="assets\icons\save.png" />
     <Resource Include="assets\icons\save_as.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Efficient.Json" Version="1.1.4" />
-    <ProjectReference Include="..\ff.wpf_tools\ff.wpf_tools.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Resource Include="assets\icons_gray\documents-add2.png" />
     <Resource Include="assets\icons_gray\documents-delete2.png" />
     <Resource Include="assets\icons_gray\documents-new.png" />
@@ -71,6 +60,11 @@
     <Resource Include="assets\icons_hot\folder_action_open.png" />
     <Resource Include="assets\icons_hot\save.png" />
     <Resource Include="assets\icons_hot\save_as.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Efficient.Json" Version="1.1.4" />
+    <ProjectReference Include="..\ff.wpf_tools\ff.wpf_tools.csproj" />
   </ItemGroup>
 
 </Project>

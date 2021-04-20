@@ -187,6 +187,16 @@ namespace ff.resource_editor.model
             }
         });
 
+        internal void on_drop(edit_tab tab, int dropped_index)
+        {
+            int index = this.edit_tabs_.IndexOf(tab);
+            if (index >= 0 && index != dropped_index)
+            {
+                int final_index = (dropped_index > index) ? dropped_index - 1 : dropped_index;
+                this.edit_tabs_.Move(index, final_index);
+            }
+        }
+
         public void open_edit_tab(resource resource)
         {
             resource.editor ??= edit_tab.create(this, resource);
@@ -199,21 +209,26 @@ namespace ff.resource_editor.model
             this.active_edit_tab = resource.editor;
         }
 
-        public void close_edit_tab(edit_tab editor)
+        public bool close_edit_tab(edit_tab editor)
         {
-            int i = this.edit_tabs_.IndexOf(editor);
-
-            if (this.active_edit_tab_ == editor)
+            if (editor != null)
             {
-                this.active_edit_tab = null;
+                int i = this.edit_tabs_.IndexOf(editor);
+
+                if (this.active_edit_tab_ == editor)
+                {
+                    this.active_edit_tab = null;
+                }
+
+                editor.resource.editor = null;
+
+                if (this.edit_tabs_.Remove(editor) && this.edit_tabs.Count > 0 && this.active_edit_tab == null)
+                {
+                    this.active_edit_tab = this.edit_tabs_[i >= 0 && i < this.edit_tabs_.Count ? i : this.edit_tabs_.Count - 1];
+                }
             }
 
-            editor.resource.editor = null;
-
-            if (this.edit_tabs_.Remove(editor) && this.edit_tabs.Count > 0 && this.active_edit_tab == null)
-            {
-                this.active_edit_tab = this.edit_tabs_[i >= 0 && i < this.edit_tabs_.Count ? i : this.edit_tabs_.Count - 1];
-            }
+            return true;
         }
 
         private delegate_command remove_source_command_;
@@ -240,6 +255,11 @@ namespace ff.resource_editor.model
         (object parameter) =>
         {
             return parameter is resource;
+        });
+
+        public ICommand close_active_tab_command => new delegate_command(() =>
+        {
+            this.close_edit_tab(this.active_edit_tab_);
         });
 
         public async Task<bool> check_dirty()

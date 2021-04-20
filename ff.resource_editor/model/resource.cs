@@ -12,13 +12,15 @@ namespace ff.resource_editor.model
         private edit_tab editor_;
         private string name_;
 
-        protected resource(source_file source, string name, resource_type type)
+        protected resource(source_file source, string name, resource_type type, JsonValue value)
         {
             this.source_ = source;
             this.type_ = type;
             this.name_ = name ?? string.Empty;
+            this.value = value;
         }
 
+        public JsonValue value { get; }
         public source_file source => this.source_;
         public resource_type type => this.type_;
         public string type_name => resource_type_utility.name_of(this.type_);
@@ -52,7 +54,7 @@ namespace ff.resource_editor.model
                         switch (type)
                         {
                             default:
-                                resource = new resource(source, name, type);
+                                resource = new resource(source, name, type, value);
                                 break;
                         }
                     }

@@ -11,7 +11,7 @@ using System.Windows.Input;
 
 namespace ff.resource_editor.ui
 {
-    internal partial class main_window : System.Windows.Window
+    internal partial class main_window : Window, drag_items_control.drag_host
     {
         public main_vm view_model { get; }
         private bool allow_close;
@@ -134,6 +134,43 @@ namespace ff.resource_editor.ui
         {
             resource resource = (resource)((FrameworkElement)sender).DataContext;
             this.view_model.open_edit_tab(resource);
+        }
+
+        private void OnTabButtonMouseDown(object sender, MouseButtonEventArgs args)
+        {
+            if (args.ChangedButton == MouseButton.Middle && sender is Button button && button.DataContext is edit_tab tab)
+            {
+                this.view_model.close_edit_tab(tab);
+            }
+        }
+
+        private void OnTabButtonMouseMoveEvent(object sender, MouseEventArgs args)
+        {
+            if (sender is Button button)
+            {
+                this.tab_items.notify_mouse_move(button, args);
+            }
+        }
+
+        private void OnTabButtonMouseCaptureEvent(object sender, MouseEventArgs args)
+        {
+            if (sender is Button button)
+            {
+                this.tab_items.notify_mouse_capture(button, args);
+            }
+        }
+
+        void drag_items_control.drag_host.on_drop(ItemsControl source, object dropped_model, int dropped_index, bool copy)
+        {
+            if (source == this.tab_items && dropped_model is edit_tab tab)
+            {
+                this.view_model.on_drop(tab, dropped_index);
+            }
+        }
+
+        bool drag_items_control.drag_host.can_drop_copy(object dropped_model)
+        {
+            return false;
         }
     }
 }

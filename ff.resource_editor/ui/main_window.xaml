@@ -12,6 +12,7 @@
     DataContext="{Binding view_model, RelativeSource={RelativeSource Mode=Self}}"
     Closing="on_closing"
     Loaded="on_loaded"
+    SnapsToDevicePixels="True"
     mc:Ignorable="d"
     d:Height="450"
     d:Width="800">
@@ -132,6 +133,10 @@
         x:Name="RootButton"
         Selector.IsSelected="{Binding active, Mode=OneWay}"
         Command="{Binding activate_command}"
+        MouseDown="OnTabButtonMouseDown"
+        PreviewMouseMove="OnTabButtonMouseMoveEvent"
+        GotMouseCapture="OnTabButtonMouseCaptureEvent"
+        LostMouseCapture="OnTabButtonMouseCaptureEvent"
         Focusable="False"
         BorderThickness="1,1,1,0"
         BorderBrush="Transparent"
@@ -160,6 +165,7 @@
     </DataTemplate>
 
   </Window.Resources>
+
   <Window.Title>
     <MultiBinding Converter="{StaticResource window_title_converter}" ConverterParameter="Resource Editor">
       <Binding Path="project" />
@@ -167,6 +173,11 @@
       <Binding Path="project.dirty" />
     </MultiBinding>
   </Window.Title>
+
+  <Window.InputBindings>
+    <KeyBinding Key="F4" Modifiers="Ctrl" Command="{Binding close_active_tab_command}" />
+  </Window.InputBindings>
+  
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="400"/>
@@ -312,13 +323,16 @@
         <RowDefinition Height="*" />
       </Grid.RowDefinitions>
 
-      <ItemsControl
+      <ui:drag_items_control
           x:Name="tab_items"
           Grid.Row="0"
           Focusable="False"
           ItemsSource="{Binding edit_tabs}"
           ItemsPanel="{StaticResource TabItemsPanelTemplate}"
           ItemTemplate="{StaticResource TabItemTemplate}" />
+
+      <ContentControl Grid.Row="1" Focusable="False" Content="{Binding active_edit_tab.root_element, FallbackValue={x:Null}}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+
     </Grid>
   </Grid>
 </Window>

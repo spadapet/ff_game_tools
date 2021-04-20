@@ -1,4 +1,5 @@
-﻿using ff.wpf_tools;
+﻿using ff.resource_editor.ui;
+using ff.wpf_tools;
 using System;
 using System.Windows;
 using System.Windows.Input;
@@ -10,6 +11,7 @@ namespace ff.resource_editor.model
         private main_vm main_vm;
         private resource resource_;
         private bool active_;
+        private bool dirty_;
         private Lazy<FrameworkElement> root_element_;
 
         protected edit_tab(main_vm main_vm, resource resource, Func<FrameworkElement> root_element_factory)
@@ -21,11 +23,16 @@ namespace ff.resource_editor.model
 
         public static edit_tab create(main_vm main_vm, resource resource)
         {
+            Func<FrameworkElement> root_element_factory = () => null;
+
             switch (resource.type)
             {
-                default:
-                    return new edit_tab(main_vm, resource, () => null);
+                case resource_type.texture:
+                    root_element_factory = () => new texture_editor(new edit_texture(resource));
+                    break;
             }
+
+            return new edit_tab(main_vm, resource, root_element_factory);
         }
 
         public resource resource => this.resource_;
@@ -36,6 +43,12 @@ namespace ff.resource_editor.model
         {
             get => this.active_;
             set => this.set_property(ref this.active_, value);
+        }
+
+        public bool dirty
+        {
+            get => this.dirty_;
+            set => this.set_property(ref this.dirty_, value);
         }
 
         public virtual FrameworkElement root_element => this.root_element_.Value;
