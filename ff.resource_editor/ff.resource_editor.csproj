@@ -76,7 +76,7 @@
 
   <ItemGroup>
     <PackageReference Include="Efficient.Json" Version="1.1.4" />
-    <ProjectReference Include="..\ff.wpf_tools\ff.WpfTools.csproj" />
+    <ProjectReference Include="..\vendor\ff_wpf_tools\ff.wpf_tools\ff.WpfTools.csproj" />
   </ItemGroup>
 
   <ItemGroup>

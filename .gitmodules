@@ -1,0 +1,4 @@
+[submodule "vendor/ff_wpf_tools"]
+	path = vendor/ff_wpf_tools
+	url = https://github.com/spadapet/ff_wpf_tools.git
+	branch = main
