@@ -210,7 +210,7 @@
         </ToolBar>
       </ToolBarTray>
 
-      <ListView x:Name="source_file_list" Grid.Row="1" Margin="4" ItemsSource="{Binding project.sources}" SelectedItem="{Binding edit_source}" SelectionMode="Single">
+      <ListView x:Name="source_file_list" Grid.Row="1" Margin="4" ItemsSource="{Binding project.sources}" SelectedItem="{Binding edit_source}" SelectionMode="Single" d:ItemsSource="{d:SampleData}">
         <ListView.ItemContainerStyle>
           <Style TargetType="ListViewItem">
             <Setter Property="ToolTip" Value="{Binding file}" />
@@ -271,7 +271,7 @@
         </ToolBar>
       </ToolBarTray>
 
-      <ListView x:Name="resource_list" Grid.Row="3" Margin="4" ItemsSource="{Binding edit_source.resources}" SelectedItem="{Binding edit_resource}" SelectionMode="Single">
+      <ListView x:Name="resource_list" Grid.Row="3" Margin="4" ItemsSource="{Binding edit_source.resources}" SelectedItem="{Binding edit_resource}" SelectionMode="Single"  d:ItemsSource="{d:SampleData}">
         <ListView.Resources>
           <Style TargetType="ListViewItem">
             <EventSetter Event="MouseDoubleClick" Handler="resource_list_item_mouse_double_click" />
