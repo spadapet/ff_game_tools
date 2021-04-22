@@ -18,50 +18,7 @@
     d:Width="800">
   <Window.Resources>
     <convert:window_title_converter x:Key="window_title_converter" />
-
-    <Style x:Key="focus_visual_inner">
-      <Setter Property="Control.Template">
-        <Setter.Value>
-          <ControlTemplate>
-            <Rectangle Margin="2" StrokeDashArray="1 2" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" SnapsToDevicePixels="true" StrokeThickness="1"/>
-          </ControlTemplate>
-        </Setter.Value>
-      </Setter>
-    </Style>
-
-    <Style x:Key="toolbar_button_style" TargetType="{x:Type Button}">
-      <Setter Property="FocusVisualStyle" Value="{StaticResource focus_visual_inner}"/>
-      <Setter Property="SnapsToDevicePixels" Value="True" />
-      <Setter Property="Template">
-        <Setter.Value>
-          <ControlTemplate TargetType="{x:Type Button}">
-            <Grid Background="Transparent">
-              <Border x:Name="border" Background="Transparent" />
-              <StackPanel Orientation="Horizontal" Margin="2">
-                <Rectangle x:Name="icon_rect" Width="24" Height="24" StrokeThickness="0" Fill="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=(ui:properties.Icon)}" />
-                <ContentPresenter x:Name="contentPresenter" Focusable="False" VerticalAlignment="Center" />
-              </StackPanel>
-            </Grid>
-            <ControlTemplate.Triggers>
-              <Trigger Property="IsMouseOver" Value="true">
-                <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
-                <Setter Property="Opacity" TargetName="border" Value="0.25"/>
-                <Setter Property="Fill" TargetName="icon_rect" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=(ui:properties.IconHot)}"/>
-              </Trigger>
-              <Trigger Property="IsPressed" Value="true">
-                <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
-                <Setter Property="Opacity" TargetName="border" Value="1"/>
-                <Setter Property="Fill" TargetName="icon_rect" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=(ui:properties.IconHot)}"/>
-              </Trigger>
-              <Trigger Property="IsEnabled" Value="false">
-                <Setter Property="Background" TargetName="border" Value="Transparent"/>
-                <Setter Property="Fill" TargetName="icon_rect" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=(ui:properties.IconGray)}"/>
-              </Trigger>
-            </ControlTemplate.Triggers>
-          </ControlTemplate>
-        </Setter.Value>
-      </Setter>
-    </Style>
+    <convert:tab_title_converter x:Key="tab_title_converter" />
 
     <!-- Panel that owns all of the tab buttons and computes layout -->
     <ItemsPanelTemplate x:Key="TabItemsPanelTemplate">
@@ -91,8 +48,15 @@
           Grid.Column="0"
           Margin="4"
           HorizontalAlignment="Center"
-          VerticalAlignment="Center"
-          Text="{Binding tab_name, Mode=OneWay}" />
+          VerticalAlignment="Center">
+          <TextBlock.Text>
+            <MultiBinding Converter="{StaticResource tab_title_converter}">
+              <Binding />
+              <Binding Path="tab_name" />
+              <Binding Path="dirty" />
+            </MultiBinding>
+          </TextBlock.Text>
+        </TextBlock>
         <Button
           x:Name="CloseButton"
           Grid.Column="1"
@@ -247,10 +211,15 @@
       </ToolBarTray>
 
       <ListView x:Name="source_file_list" Grid.Row="1" Margin="4" ItemsSource="{Binding project.sources}" SelectedItem="{Binding edit_source}" SelectionMode="Single">
+        <ListView.ItemContainerStyle>
+          <Style TargetType="ListViewItem">
+            <Setter Property="ToolTip" Value="{Binding file}" />
+          </Style>
+        </ListView.ItemContainerStyle>
         <ListView.View>
           <GridView AllowsColumnReorder="False">
-            <GridViewColumn Header="Name" Width="80" DisplayMemberBinding="{Binding name}" />
-            <GridViewColumn Header="Path" DisplayMemberBinding="{Binding file}" />
+            <GridViewColumn Header="Name" Width="125" DisplayMemberBinding="{Binding name}" />
+            <GridViewColumn Header="Path" Width="250" DisplayMemberBinding="{Binding project_relative_file}" />
           </GridView>
         </ListView.View>
       </ListView>
@@ -310,9 +279,9 @@
         </ListView.Resources>
         <ListView.View>
           <GridView AllowsColumnReorder="False">
-            <GridViewColumn Header="Name" Width="80" DisplayMemberBinding="{Binding name}" />
-            <GridViewColumn Header="Type" DisplayMemberBinding="{Binding type_name}" />
-            <GridViewColumn Header="Editing" DisplayMemberBinding="{Binding editing}" />
+            <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding name}" />
+            <GridViewColumn Header="Type" Width="75" DisplayMemberBinding="{Binding type_name}" />
+            <GridViewColumn Header="Editing" Width="75" DisplayMemberBinding="{Binding editing}" />
           </GridView>
         </ListView.View>
       </ListView>

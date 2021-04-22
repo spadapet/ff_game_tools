@@ -1,5 +1,5 @@
 ﻿using ff.resource_editor.model;
-using ff.wpf_tools;
+using ff.WpfTools;
 using System;
 using System.Globalization;
 
@@ -8,9 +8,9 @@ namespace ff.resource_editor.converters
     /// <summary>
     /// Generates the text that's shown in the window's title bar
     /// </summary>
-    internal class window_title_converter : multi_value_converter
+    internal class window_title_converter : MultiValueConverter
     {
-        public override object convert(object[] values, Type target_type, object parameter, CultureInfo culture)
+        public override object Convert(object[] values, Type target_type, object parameter, CultureInfo culture)
         {
             string title = (string)parameter;
             project project = (project)values[0];

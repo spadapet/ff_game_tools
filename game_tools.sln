@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution_items", "solution_
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ff.wpf_tools", "ff.wpf_tools\ff.wpf_tools.csproj", "{30591A66-8FF9-4069-A7CA-7CEC013D3D77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ff.WpfTools", "ff.wpf_tools\ff.WpfTools.csproj", "{30591A66-8FF9-4069-A7CA-7CEC013D3D77}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

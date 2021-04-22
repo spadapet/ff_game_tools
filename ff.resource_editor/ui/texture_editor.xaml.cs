@@ -9,10 +9,10 @@ namespace ff.resource_editor.ui
     /// </summary>
     internal partial class texture_editor : UserControl
     {
-        public edit_texture view_model { get; }
+        public texture_editor_vm view_model { get; }
         private int wheel_scroll;
 
-        public texture_editor(edit_texture view_model)
+        public texture_editor(texture_editor_vm view_model)
         {
             this.view_model = view_model;
             this.InitializeComponent();

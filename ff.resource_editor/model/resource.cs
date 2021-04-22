@@ -1,11 +1,11 @@
 ﻿using Efficient.Json;
-using ff.wpf_tools;
+using ff.WpfTools;
 using System;
 using System.Threading.Tasks;
 
 namespace ff.resource_editor.model
 {
-    internal class resource : property_notifier, IEquatable<resource>, IComparable<resource>
+    internal class resource : PropertyNotifier, IEquatable<resource>, IComparable<resource>
     {
         private source_file source_;
         private resource_type type_;
@@ -31,9 +31,9 @@ namespace ff.resource_editor.model
             get => this.editor_;
             set
             {
-                if (this.set_property(ref this.editor_, value))
+                if (this.SetProperty(ref this.editor_, value))
                 {
-                    this.on_property_changed(nameof(this.editing));
+                    this.OnPropertyChanged(nameof(this.editing));
                 }
             }
         }

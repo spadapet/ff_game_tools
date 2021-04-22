@@ -1,4 +1,4 @@
-﻿using ff.wpf_tools;
+﻿using ff.WpfTools;
 using Microsoft.Win32;
 using System;
 using System.Collections;
@@ -13,7 +13,7 @@ using System.Windows.Input;
 
 namespace ff.resource_editor.model
 {
-    internal class main_vm : property_notifier
+    internal class main_vm : PropertyNotifier
     {
         private project project_;
         private source_file edit_source_;
@@ -30,7 +30,7 @@ namespace ff.resource_editor.model
         public project project
         {
             get => this.project_;
-            set => this.set_property(ref this.project_, value ?? new());
+            set => this.SetProperty(ref this.project_, value ?? new());
         }
 
         public source_file edit_source
@@ -38,10 +38,10 @@ namespace ff.resource_editor.model
             get => this.edit_source_;
             set
             {
-                if (this.set_property(ref this.edit_source_, value))
+                if (this.SetProperty(ref this.edit_source_, value))
                 {
-                    this.on_property_changed(nameof(this.has_edit_source));
-                    this.remove_source_command_?.update_can_execute();
+                    this.OnPropertyChanged(nameof(this.has_edit_source));
+                    this.remove_source_command_?.UpdateCanExecute();
                 }
             }
         }
@@ -53,9 +53,9 @@ namespace ff.resource_editor.model
             get => this.edit_resource_;
             set
             {
-                if (this.set_property(ref this.edit_resource_, value))
+                if (this.SetProperty(ref this.edit_resource_, value))
                 {
-                    this.delete_resource_command_?.update_can_execute();
+                    this.delete_resource_command_?.UpdateCanExecute();
                 }
             }
         }
@@ -74,7 +74,7 @@ namespace ff.resource_editor.model
                         this.active_edit_tab_.active = false;
                     }
 
-                    this.set_property(ref this.active_edit_tab_, value);
+                    this.SetProperty(ref this.active_edit_tab_, value);
 
                     if (this.active_edit_tab_ != null)
                     {
@@ -84,7 +84,7 @@ namespace ff.resource_editor.model
             }
         }
 
-        public ICommand new_command => new delegate_command(async () =>
+        public ICommand new_command => new DelegateCommand(async () =>
         {
             if (await this.check_dirty())
             {
@@ -92,7 +92,7 @@ namespace ff.resource_editor.model
             }
         });
 
-        public ICommand open_command => new delegate_command(async () =>
+        public ICommand open_command => new DelegateCommand(async () =>
         {
             if (await this.check_dirty())
             {
@@ -117,7 +117,7 @@ namespace ff.resource_editor.model
             }
         });
 
-        public ICommand save_command => new delegate_command(async (object parameter) =>
+        public ICommand save_command => new DelegateCommand(async (object parameter) =>
         {
             if (this.project.has_file)
             {
@@ -136,7 +136,7 @@ namespace ff.resource_editor.model
             }
         });
 
-        public ICommand save_as_command => new delegate_command(async () =>
+        public ICommand save_as_command => new DelegateCommand(async () =>
         {
             SaveFileDialog dialog = new SaveFileDialog
             {
@@ -164,7 +164,7 @@ namespace ff.resource_editor.model
             }
         });
 
-        public ICommand add_source_command => new delegate_command(async () =>
+        public ICommand add_source_command => new DelegateCommand(async () =>
         {
             OpenFileDialog dialog = new OpenFileDialog
             {
@@ -231,8 +231,8 @@ namespace ff.resource_editor.model
             return true;
         }
 
-        private delegate_command remove_source_command_;
-        public ICommand remove_source_command => this.remove_source_command_ ??= new delegate_command((object parameter) =>
+        private DelegateCommand remove_source_command_;
+        public ICommand remove_source_command => this.remove_source_command_ ??= new DelegateCommand((object parameter) =>
         {
             if (parameter is IEnumerable sources)
             {
@@ -248,8 +248,8 @@ namespace ff.resource_editor.model
             return parameter is source_file;
         });
 
-        private delegate_command delete_resource_command_;
-        public ICommand delete_resource_command => this.delete_resource_command_ ??= new delegate_command((object parameter) =>
+        private DelegateCommand delete_resource_command_;
+        public ICommand delete_resource_command => this.delete_resource_command_ ??= new DelegateCommand((object parameter) =>
         {
         },
         (object parameter) =>
@@ -257,7 +257,7 @@ namespace ff.resource_editor.model
             return parameter is resource;
         });
 
-        public ICommand close_active_tab_command => new delegate_command(() =>
+        public ICommand close_active_tab_command => new DelegateCommand(() =>
         {
             this.close_edit_tab(this.active_edit_tab_);
         });

@@ -1,4 +1,4 @@
-﻿using ff.wpf_tools;
+﻿using ff.WpfTools;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -33,7 +33,7 @@ namespace ff.resource_editor.ui
             this.DragLeave += this.on_drag_leave;
         }
 
-        private drag_host host => wpf_utility.find_visual_ancestor<drag_host>(this);
+        private drag_host host => WpfUtility.FindVisualAncestor<drag_host>(this);
 
         private void on_drop(object sender, DragEventArgs args)
         {
@@ -82,7 +82,7 @@ namespace ff.resource_editor.ui
             ItemCollection items = this.Items;
             Point point = args.GetPosition(this);
             IInputElement hit = this.InputHitTest(point);
-            ContentPresenter item = wpf_utility.find_item_container<ContentPresenter>(this, hit as DependencyObject);
+            ContentPresenter item = WpfUtility.FindItemContainer<ContentPresenter>(this, hit as DependencyObject);
 
             if (item == null)
             {
@@ -177,7 +177,7 @@ namespace ff.resource_editor.ui
         {
             if (args.MouseDevice.Captured != null)
             {
-                if (wpf_utility.find_item_container<ContentPresenter>(this, sender) is ContentPresenter item && !this.dragging)
+                if (WpfUtility.FindItemContainer<ContentPresenter>(this, sender) is ContentPresenter item && !this.dragging)
                 {
                     this.mouse_capture_point = args.GetPosition(this);
                     this.capture_item = item;

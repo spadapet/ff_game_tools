@@ -1,4 +1,4 @@
-﻿using ff.wpf_tools;
+﻿using ff.WpfTools;
 using System;
 using System.IO;
 using System.Reflection;
@@ -10,7 +10,7 @@ namespace ff.resource_editor.model
     /// Persists between app sessions
     /// </summary>
     [DataContract]
-    internal class app_state : property_notifier
+    internal class app_state : PropertyNotifier
     {
         private string project_file_;
 
@@ -23,7 +23,7 @@ namespace ff.resource_editor.model
         public string project_file
         {
             get => this.project_file_;
-            set => this.set_property(ref this.project_file_, value ?? string.Empty);
+            set => this.SetProperty(ref this.project_file_, value ?? string.Empty);
         }
 
         public static string state_file => Path.Combine(app_state.app_data_path, $"{nameof(app_state)}.json");

@@ -17,6 +17,8 @@
     <None Remove="assets\icons\folder_action_open.png" />
     <None Remove="assets\icons\save.png" />
     <None Remove="assets\icons\save_as.png" />
+    <None Remove="assets\icons\zoom_in.png" />
+    <None Remove="assets\icons\zoom_out.png" />
     <None Remove="assets\icons_gray\add.png" />
     <None Remove="assets\icons_gray\delete.png" />
     <None Remove="assets\icons_gray\documents-add2.png" />
@@ -25,6 +27,8 @@
     <None Remove="assets\icons_gray\folder_action_open.png" />
     <None Remove="assets\icons_gray\save.png" />
     <None Remove="assets\icons_gray\save_as.png" />
+    <None Remove="assets\icons_gray\zoom_in.png" />
+    <None Remove="assets\icons_gray\zoom_out.png" />
     <None Remove="assets\icons_hot\add.png" />
     <None Remove="assets\icons_hot\delete.png" />
     <None Remove="assets\icons_hot\documents-add2.png" />
@@ -33,13 +37,19 @@
     <None Remove="assets\icons_hot\folder_action_open.png" />
     <None Remove="assets\icons_hot\save.png" />
     <None Remove="assets\icons_hot\save_as.png" />
+    <None Remove="assets\icons_hot\zoom_in.png" />
+    <None Remove="assets\icons_hot\zoom_out.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="assets\icons\add.png" />
     <Resource Include="assets\icons\delete.png" />
+    <Resource Include="assets\icons\zoom_in.png" />
+    <Resource Include="assets\icons\zoom_out.png" />
     <Resource Include="assets\icons_gray\add.png" />
     <Resource Include="assets\icons_gray\delete.png" />
+    <Resource Include="assets\icons_gray\zoom_in.png" />
+    <Resource Include="assets\icons_gray\zoom_out.png" />
     <Resource Include="assets\icons_hot\add.png" />
     <Resource Include="assets\icons_hot\delete.png" />
     <Resource Include="assets\icons\documents-add2.png" />
@@ -60,11 +70,26 @@
     <Resource Include="assets\icons_hot\folder_action_open.png" />
     <Resource Include="assets\icons_hot\save.png" />
     <Resource Include="assets\icons_hot\save_as.png" />
+    <Resource Include="assets\icons_hot\zoom_in.png" />
+    <Resource Include="assets\icons_hot\zoom_out.png" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Efficient.Json" Version="1.1.4" />
-    <ProjectReference Include="..\ff.wpf_tools\ff.wpf_tools.csproj" />
+    <ProjectReference Include="..\ff.wpf_tools\ff.WpfTools.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="ui\json_editor.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="ui\json_editor.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
 </Project>

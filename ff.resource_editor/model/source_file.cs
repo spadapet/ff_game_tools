@@ -1,5 +1,5 @@
 ﻿using Efficient.Json;
-using ff.wpf_tools;
+using ff.WpfTools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,8 +11,9 @@ using System.Threading.Tasks;
 namespace ff.resource_editor.model
 {
     [DataContract]
-    internal class source_file : property_notifier, IEquatable<source_file>, IComparable<source_file>
+    internal class source_file : PropertyNotifier, IEquatable<source_file>, IComparable<source_file>
     {
+        private project project_;
         private string file_;
         private bool dirty_;
         private List<JsonValue> extra_root_values;
@@ -100,20 +101,36 @@ namespace ff.resource_editor.model
                     value = string.Empty;
                 }
 
-                if (this.set_property(ref this.file_, value))
+                if (this.SetProperty(ref this.file_, value))
                 {
-                    this.on_property_changed(nameof(this.name));
+                    this.OnPropertyChanged(nameof(this.name));
+                    this.OnPropertyChanged(nameof(this.directory));
+                    this.OnPropertyChanged(nameof(this.project_relative_file));
                 }
             }
         }
 
         public string name => Path.GetFileName(this.file);
         public string directory => Path.GetDirectoryName(this.file);
+        public string project_relative_file => (this.project_ != null) ? Path.GetRelativePath(this.project.directoy, this.file) : this.file;
+
+        public project project
+        {
+            get => this.project_;
+            set
+            {
+                if (this.SetProperty(ref this.project_, value))
+                {
+                    this.OnPropertyChanged(nameof(this.project_relative_file));
+                }
+            }
+        }
+
 
         public bool dirty
         {
             get => this.dirty_;
-            set => this.set_property(ref this.dirty_, value);
+            set => this.SetProperty(ref this.dirty_, value);
         }
 
         public IList<resource> resources => this.resources_;

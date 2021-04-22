@@ -32,4 +32,12 @@
   <ImageBrush x:Key="save_as_icon_hot" ImageSource="/assets/icons_hot/save_as.png" />
   <ImageBrush x:Key="save_as_icon_gray" ImageSource="/assets/icons_gray/save_as.png" />
 
+  <ImageBrush x:Key="zoom_in_icon" ImageSource="/assets/icons/zoom_in.png" />
+  <ImageBrush x:Key="zoom_in_icon_hot" ImageSource="/assets/icons_hot/zoom_in.png" />
+  <ImageBrush x:Key="zoom_in_icon_gray" ImageSource="/assets/icons_gray/zoom_in.png" />
+
+  <ImageBrush x:Key="zoom_out_icon" ImageSource="/assets/icons/zoom_out.png" />
+  <ImageBrush x:Key="zoom_out_icon_hot" ImageSource="/assets/icons_hot/zoom_out.png" />
+  <ImageBrush x:Key="zoom_out_icon_gray" ImageSource="/assets/icons_gray/zoom_out.png" />
+
 </ResourceDictionary>

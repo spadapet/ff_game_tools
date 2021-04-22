@@ -1,4 +1,4 @@
-﻿using ff.wpf_tools;
+﻿using ff.WpfTools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace ff.resource_editor.model
 {
     [DataContract]
-    internal class project : property_notifier
+    internal class project : PropertyNotifier
     {
         private readonly ObservableCollection<source_file> sources_;
         private string file_;
@@ -32,15 +32,23 @@ namespace ff.resource_editor.model
         public bool dirty
         {
             get => this.dirty_ || this.sources.Any(s => s.dirty);
-            private set => this.set_property(ref this.dirty_, value);
+            private set => this.SetProperty(ref this.dirty_, value);
         }
 
         public bool has_file => !string.IsNullOrEmpty(this.file_);
         public string file
         {
             get => this.file_;
-            private set => this.set_property(ref this.file_, value ?? string.Empty);
+            private set
+            {
+                if (this.SetProperty(ref this.file_, value ?? string.Empty))
+                {
+                    this.OnPropertyChanged(nameof(this.directoy));
+                }
+            }
         }
+
+        public string directoy => Path.GetDirectoryName(this.file);
 
         public static async Task<project> load_async(string file)
         {
@@ -90,19 +98,30 @@ namespace ff.resource_editor.model
         {
             if (args.OldItems != null)
             {
-                foreach (INotifyPropertyChanged source in args.OldItems)
+                foreach (source_file source in args.OldItems)
                 {
-                    source.PropertyChanged -= this.on_source_property_changed;
+                    if (source is INotifyPropertyChanged source_notify)
+                    {
+                        source_notify.PropertyChanged -= this.on_source_property_changed;
+                    }
+
+                    source.project = null;
                     this.dirty = true;
                 }
             }
 
             if (args.NewItems != null)
             {
-                foreach (INotifyPropertyChanged source in args.NewItems)
+                foreach (source_file source in args.NewItems)
                 {
-                    source.PropertyChanged += this.on_source_property_changed;
+                    source.project = this;
                     this.dirty = true;
+
+                    if (source is INotifyPropertyChanged source_notify)
+                    {
+                        source_notify.PropertyChanged += this.on_source_property_changed;
+                    }
+
                 }
             }
         }
@@ -113,7 +132,7 @@ namespace ff.resource_editor.model
 
             if (any || args.PropertyName == nameof(source_file.dirty))
             {
-                this.on_property_changed(nameof(this.dirty));
+                this.OnPropertyChanged(nameof(this.dirty));
             }
         }
     }

@@ -6,25 +6,46 @@
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
   xmlns:model="clr-namespace:ff.resource_editor.model"
-  DataContext="{Binding view_model, RelativeSource={RelativeSource Mode=Self}}"
-  d:DataContext="{d:DesignInstance Type=model:edit_texture, IsDesignTimeCreatable=True}"
+  xmlns:ui="clr-namespace:ff.resource_editor.ui"
+  d:DataContext="{d:DesignInstance Type=model:texture_editor_vm}"
   d:DesignHeight="450" d:DesignWidth="800"
+  DataContext="{Binding view_model, RelativeSource={RelativeSource Mode=Self}}"
   mc:Ignorable="d">
   <Grid>
     <Grid.RowDefinitions>
-      <RowDefinition Height="Auto" />
-      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
-    <Grid Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+    <Border Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
       <ToolBarTray>
         <ToolBar>
           <TextBox Text="{Binding zoom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="30" />
-          <Button Content="Zoom out" Command="{Binding zoom_out_command}" />
-          <Button Content="Zoom in" Command="{Binding zoom_in_command}" />
+
+          <Button
+            ToolTip="Zoom out"
+            Command="{Binding zoom_out_command}"
+            Style="{StaticResource toolbar_button_style}"
+            ui:properties.Icon="{StaticResource zoom_out_icon}"
+            ui:properties.IconHot="{StaticResource zoom_out_icon_hot}"
+            ui:properties.IconGray="{StaticResource zoom_out_icon_gray}" />
+
+          <Button
+            ToolTip="Zoom in"
+            Command="{Binding zoom_in_command}"
+            Style="{StaticResource toolbar_button_style}"
+            ui:properties.Icon="{StaticResource zoom_in_icon}"
+            ui:properties.IconHot="{StaticResource zoom_in_icon_hot}"
+            ui:properties.IconGray="{StaticResource zoom_in_icon_gray}" />
         </ToolBar>
       </ToolBarTray>
-    </Grid>
-    <ScrollViewer Grid.Row="1" MouseWheel="on_mouse_wheel" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+    </Border>
+    <Border Grid.Row="1" Padding="4" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+      <StackPanel Orientation="Horizontal">
+        <CheckBox IsThreeState="True" Content="Compress" IsChecked="{Binding compress}" />
+      </StackPanel>
+    </Border>
+    <ScrollViewer Grid.Row="2" MouseWheel="on_mouse_wheel" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
       <Border Margin="20" BorderThickness="1" BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" HorizontalAlignment="Left" VerticalAlignment="Top">
         <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{Binding image_source}" Width="{Binding image_width}" Height="{Binding image_height}" Stretch="Fill" />
       </Border>
