@@ -1,5 +1,4 @@
 ﻿using Efficient.Json;
-using ff.WpfTools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using WpfTools;
 
 namespace ff.resource_editor.model
 {

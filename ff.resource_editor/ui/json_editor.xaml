@@ -6,7 +6,7 @@
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
   xmlns:model="clr-namespace:ff.resource_editor.model"
-  xmlns:ff="clr-namespace:ff.WpfTools;assembly=ff.WpfTools"
+  xmlns:ff="clr-namespace:WpfTools;assembly=WpfTools"
   d:DataContext="{d:DesignInstance Type=model:json_editor_vm}"
   d:DesignHeight="450" d:DesignWidth="800"
   DataContext="{Binding view_model, RelativeSource={RelativeSource Mode=Self}}"

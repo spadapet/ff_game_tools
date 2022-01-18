@@ -1,7 +1,7 @@
 ﻿using ff.resource_editor.model;
-using ff.WpfTools;
 using System;
 using System.Globalization;
+using WpfTools;
 
 namespace ff.resource_editor.converters
 {

@@ -1,8 +1,7 @@
 ﻿using Efficient.Json;
-using ff.WpfTools;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
+using WpfTools;
 
 namespace ff.resource_editor.model
 {

@@ -10,8 +10,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution_items", "solution_
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ff.WpfTools", "vendor\ff_wpf_tools\ff.wpf_tools\ff.WpfTools.csproj", "{30591A66-8FF9-4069-A7CA-7CEC013D3D77}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,10 +20,6 @@ Global
 		{6FA038B6-3FE0-4304-8420-DB165A151859}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FA038B6-3FE0-4304-8420-DB165A151859}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FA038B6-3FE0-4304-8420-DB165A151859}.Release|Any CPU.Build.0 = Release|Any CPU
-		{30591A66-8FF9-4069-A7CA-7CEC013D3D77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{30591A66-8FF9-4069-A7CA-7CEC013D3D77}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{30591A66-8FF9-4069-A7CA-7CEC013D3D77}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{30591A66-8FF9-4069-A7CA-7CEC013D3D77}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

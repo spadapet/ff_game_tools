@@ -1,8 +1,8 @@
-﻿using ff.WpfTools;
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization;
+using WpfTools;
 
 namespace ff.resource_editor.model
 {
